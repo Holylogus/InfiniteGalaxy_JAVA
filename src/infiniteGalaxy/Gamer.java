@@ -163,18 +163,82 @@ public class Gamer {
 			System.out.println(colorize(this.color)+ counter + ". " + actions);
 			counter ++;
 		}
-		int scanner = actionScan.nextInt();
-		switch (scanner) {
-		case 1:
-			
-			break;
-
-		default:
-			break;
+		int scanner = actionScan.nextInt()+1;
+		if (this.currentActions.get(scanner) == Actions.CollectCivilization) {
+			collectCivilization();
+			this.currentActions.remove(scanner);
+		}
+		else if (this.currentActions.get(scanner) == Actions.CollectEnergy) {
+			colletEnergy();
+			this.currentActions.remove(scanner);
+		}
+		else if (this.currentActions.get(scanner) == Actions.MoveShips) {
+			moveShip();
+			this.currentActions.remove(scanner);
+		}
+		else if (this.currentActions.get(scanner) == Actions.Diplomacy) {
+			useDiplomacy();
+			this.currentActions.remove(scanner);
+		}
+		else if (this.currentActions.get(scanner) == Actions.Economy) {
+			useEconomy();
+			this.currentActions.remove(scanner);
+		}
+		else if (this.currentActions.get(scanner) == Actions.UsePlanet) {
+			usePlanet();
+			this.currentActions.remove(scanner);
 		}
 		
 		
 	}
+	private void usePlanet() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	private void useEconomy() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	private void useDiplomacy() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	private void moveShip() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	private void colletEnergy() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	private void collectCivilization() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
 	private String colorize(Color color) {
 		switch (color) {
 		case Blue:

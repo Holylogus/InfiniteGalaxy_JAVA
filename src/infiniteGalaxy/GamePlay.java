@@ -35,7 +35,10 @@ public class GamePlay {
 		for (Gamer gamer : gamerList) {
 			int rollDiceNumbers = calculateRollDiceNumber(gamer);
 			gamer.throwDice(rollDiceNumbers);
-			gamer.ChooseAction(gamer.currentActions);
+			while (gamer.currentActions.size() != 0) {
+				gamer.ChooseAction(gamer.currentActions);
+			}
+			
 			
 		}
 		
