@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author hamarpatrik
+ *
+ */
+module InfinityGalxy {
+}
