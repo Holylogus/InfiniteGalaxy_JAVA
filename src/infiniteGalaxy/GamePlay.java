@@ -20,23 +20,34 @@ public class GamePlay {
 	
 	
 	List<Gamer> gamerList = new ArrayList<>();
+	List<Planet> planettList = new ArrayList<>();
 	
 
 	public void runTurns() {
-		//adattagok
-		
-		
-		
 		//Előkészítés
-		gamerList.add(new Gamer(Color.Blue));
-		gamerList.add(new Gamer(Color.Green));
+		planettList.add(new Planet("Gordius",PlanetResourceType.Civilization,PlanetColonizeType.Economy, 2, 1, ()-> System.out.println("Itt lesz a bolgyó képessége")));
+		planettList.add(new Planet("Palangus",PlanetResourceType.Energy,PlanetColonizeType.Economy, 5, 5, ()-> System.out.println("Itt lesz a bolgyó képessége")));
+		planettList.add(new Planet("Tatoine",PlanetResourceType.Civilization,PlanetColonizeType.Economy, 6, 7, ()-> System.out.println("Itt lesz a bolgyó képessége")));
+		planettList.add(new Planet("Corusant",PlanetResourceType.Civilization,PlanetColonizeType.Economy, 6, 7, ()-> System.out.println("Itt lesz a bolgyó képessége")));
+		planettList.add(new Planet("Naboo",PlanetResourceType.Energy,PlanetColonizeType.Economy, 6, 7, ()-> System.out.println("Itt lesz a bolgyó képessége")));
+		planettList.add(new Planet("Navarro",PlanetResourceType.Civilization,PlanetColonizeType.Economy, 3, 2, ()-> System.out.println("Itt lesz a bolgyó képessége")));
+		planettList.add(new Planet("Havok",PlanetResourceType.Energy,PlanetColonizeType.Diplomacy, 5, 5, ()-> System.out.println("Itt lesz a bolgyó képessége")));
+		planettList.add(new Planet("Endor",PlanetResourceType.Energy,PlanetColonizeType.Diplomacy, 3, 2, ()-> System.out.println("Itt lesz a bolgyó képessége")));
+		planettList.add(new Planet("Javyn",PlanetResourceType.Energy,PlanetColonizeType.Economy, 5, 5, ()-> System.out.println("Itt lesz a bolgyó képessége")));
 		
+		
+		gamerList.add(new Gamer(ColorEnums.Blue));
+		System.out.println(gamerList.get(0).toString());
+		System.out.println(gamerList.get(0).gamerShips);
+		gamerList.add(new Gamer(ColorEnums.Green));
+		System.out.println(gamerList.get(1).toString());
+		System.out.println(gamerList.get(1).gamerShips);
 		//Játék
 		for (Gamer gamer : gamerList) {
 			int rollDiceNumbers = calculateRollDiceNumber(gamer);
 			gamer.throwDice(rollDiceNumbers);
 			while (gamer.currentActions.size() != 0) {
-				gamer.ChooseAction(gamer.currentActions);
+				gamer.ChooseAction(gamer.currentActions, planettList);
 			}
 			
 			
@@ -47,7 +58,7 @@ public class GamePlay {
 		
 	}
 
-	
+
 
 	public void checkVicoryPoints() {
 		// TODO Auto-generated method stub
@@ -74,28 +85,28 @@ public class GamePlay {
 		switch (gamer.getEmpireMarker()) {
 		case 2:
 			diceNumbers = 5;
-			gamer.setSpaceships(2);
+			gamer.addSpaceships(2);
 			break;
 		case 3:
 			diceNumbers = 5;
-			gamer.setSpaceships(3);
+			gamer.addSpaceships(3);
 			break;
 		case 4:
 			diceNumbers = 6;
-			gamer.setSpaceships(3);
+			gamer.addSpaceships(3);
 			break;
 		case 5:
 			diceNumbers = 6;
-			gamer.setSpaceships(4);
+			gamer.addSpaceships(4);
 			break;
 		case 6:
 			diceNumbers = 7;
-			gamer.setSpaceships(4);
+			gamer.addSpaceships(4);
 			break;
 
 		default:
 			diceNumbers = 4;
-			gamer.setSpaceships(2);
+			gamer.addSpaceships(2);
 			break;
 		}
 		return diceNumbers;

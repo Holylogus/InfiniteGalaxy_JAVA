@@ -1,6 +1,6 @@
 package infiniteGalaxy;
 
-public enum Color {
+public enum ColorEnums {
 	Blue,
 	Red,
 	Yellow,

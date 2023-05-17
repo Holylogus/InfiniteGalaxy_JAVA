@@ -1,6 +1,6 @@
 package infiniteGalaxy;
 
-public enum Actions {
+public enum ActionsEnums {
 	MoveShips,
 	CollectEnergy,
 	CollectCivilization,

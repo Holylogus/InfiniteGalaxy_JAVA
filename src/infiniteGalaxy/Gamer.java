@@ -7,42 +7,40 @@ import java.util.Scanner;
 
 public class Gamer {
 	
-	private Color color;
+	private static int gamers;
+	private ColorEnums color;
 	private int spaceships;
 	private int civilizationMarker;
 	private int energyMarker;
 	private int empireMarker;
 	private int victoryPoint;
-	public List<Actions> currentActions = new ArrayList<>();
+	public List<ActionsEnums> currentActions = new ArrayList<>();
+	public List<Ships> gamerShips = new ArrayList<>();
 	public static final Random rnd = new Random();
 	public static final Scanner actionScan = new Scanner(System.in);
 	
 	
-	
-	public Gamer(Color color, int spaceships, int civilizationMarker, int energyMarker, int empireMarker,
+	//Constructors
+	public Gamer(ColorEnums color, int spaceships, int civilizationMarker, int energyMarker, int empireMarker,
 			int victoryPoint) {
 		super();
 		this.color = color;
-		setSpaceships(spaceships);
+		addSpaceships(spaceships);
 		setCivilizationMarker(civilizationMarker);
 		setEnergyMarker(energyMarker);
 		setEmpireMarker(empireMarker);
 		setVictoryPoint(victoryPoint);
+		gamers++;
 	}
 	
-
-
-
-	public Gamer(Color color) {
-		this(color, 2, 1, 2, 1, 0);
+	public Gamer(ColorEnums color) {
+		this(color, 0, 1, 2, 1, 0);
 	}
-
-
-
+	
+	//Getters&Setters
 	public int getCivilizationMarker() {
 		return civilizationMarker;
 	}
-
 
 	public void setCivilizationMarker(int civilizationMarker) {
 		if (civilizationMarker > 7) {
@@ -55,37 +53,39 @@ public class Gamer {
 		
 	}
 
-
 	public int getEmpireMarker() {
 		return empireMarker;
 	}
 
-
 	public void setEmpireMarker(int empireMarker) {
 		this.empireMarker = empireMarker;
 	}
-
-
+	
 	public int getSpaceships() {
 		return spaceships;
 	}
 
-
-	public void setSpaceships(int spaceships) {
-		if (spaceships > 4) {
-			this.spaceships = 4;
+	public void addSpaceships(int spaceships) {
+		if (gamerShips.size() > 4) {
+			this.spaceships = 0;
+			System.out.println("nem lehet több hajód");
 		}
-		else if (spaceships <2) {
+		else if (gamerShips.size() <2) {
 			this.spaceships = 2;
 		}
-		this.spaceships = spaceships;
+		else {
+			this.spaceships = spaceships;
+		}
+		for (int i = 0; i < this.spaceships; i++) {
+			this.gamerShips.add(gamerShips.size(), new Ships(gamerShips.size()));
+		}
+		
+		
 	}
-
 
 	public int getEnergyMarker() {
 		return energyMarker;
 	}
-
 
 	public void setEnergyMarker(int energyMarker) {
 		if (energyMarker > 7) {
@@ -97,26 +97,18 @@ public class Gamer {
 		this.energyMarker = energyMarker;
 	}
 
-
 	public int getVictoryPoint() {
 		return victoryPoint;
 	}
-
 
 	public void setVictoryPoint(int victoryPoint) {
 		this.victoryPoint = victoryPoint;
 	}
 	
-
-
-
-	public Color getColor() {
+	public ColorEnums getColor() {
 		return color;
 	}
 	
-	
-
-
 	@Override
 	public String toString() {
 		return "Jatekos [color=" + color + ", spaceships=" + spaceships + ", civilizationMarker=" + civilizationMarker
@@ -124,29 +116,28 @@ public class Gamer {
 				+ "]";
 	}
 	
-	//usable methods
-	
+	//usable methods	
 	public void throwDice(int diceNumbers) {
 		for (int i = 0; i < diceNumbers; i++) {
 			int throwDice = rnd.nextInt(6)+1;
 			switch (throwDice) {
 			case 1:
-				this.currentActions.add(Actions.MoveShips);
+				this.currentActions.add(ActionsEnums.MoveShips);
 				break;
 			case 2:
-				currentActions.add(Actions.CollectEnergy);
+				currentActions.add(ActionsEnums.CollectEnergy);
 				break;
 			case 3:
-				currentActions.add(Actions.CollectCivilization);
+				currentActions.add(ActionsEnums.CollectCivilization);
 				break;
 			case 4:
-				currentActions.add(Actions.Diplomacy);
+				currentActions.add(ActionsEnums.Diplomacy);
 				break;
 			case 5:
-				currentActions.add(Actions.Economy);
+				currentActions.add(ActionsEnums.Economy);
 				break;
 			case 6:
-				currentActions.add(Actions.UsePlanet);
+				currentActions.add(ActionsEnums.UsePlanet);
 				break;
 
 			default:
@@ -156,90 +147,146 @@ public class Gamer {
 		
 	}
 	
-	public void ChooseAction(List<Actions> currentActions) {
+	public void ChooseAction(List<ActionsEnums> currentActions, List<Planet> planets) {
 		System.out.println(colorize(this.color) + "Választható Akciók");
-		int counter = 1;
-		for (Actions actions : currentActions) {
-			System.out.println(colorize(this.color)+ counter + ". " + actions);
-			counter ++;
+		int index = 0;
+		for (ActionsEnums actions : currentActions) {
+			
+			System.out.println(colorize(this.color)+ index + ". " + actions);
+			index ++;
 		}
-		int scanner = actionScan.nextInt()+1;
-		if (this.currentActions.get(scanner) == Actions.CollectCivilization) {
-			collectCivilization();
+		int scanner = actionScan.nextInt();
+		while (scanner >= currentActions.size() || scanner < 0) {
+			System.out.println("A listából válasszon!");
+			scanner = actionScan.nextInt();
+		}
+		if (this.currentActions.get(scanner) == ActionsEnums.CollectCivilization) {
+			collectCivilization(gamerShips, planets);
+			this.currentActions.remove(scanner);
+			this.toString();
+		}
+		else if (this.currentActions.get(scanner) == ActionsEnums.CollectEnergy) {
+			colletEnergy(gamerShips, planets);
+			this.currentActions.remove(scanner);
+			this.toString();
+		}
+		else if (this.currentActions.get(scanner) == ActionsEnums.MoveShips) {
+			moveShip(ChoosePlanets(planets));
 			this.currentActions.remove(scanner);
 		}
-		else if (this.currentActions.get(scanner) == Actions.CollectEnergy) {
-			colletEnergy();
+		else if (this.currentActions.get(scanner) == ActionsEnums.Diplomacy) {
+			useDiplomacy(gamerShips, planets);
 			this.currentActions.remove(scanner);
 		}
-		else if (this.currentActions.get(scanner) == Actions.MoveShips) {
-			moveShip();
-			this.currentActions.remove(scanner);
-		}
-		else if (this.currentActions.get(scanner) == Actions.Diplomacy) {
-			useDiplomacy();
-			this.currentActions.remove(scanner);
-		}
-		else if (this.currentActions.get(scanner) == Actions.Economy) {
+		else if (this.currentActions.get(scanner) == ActionsEnums.Economy) {
 			useEconomy();
 			this.currentActions.remove(scanner);
 		}
-		else if (this.currentActions.get(scanner) == Actions.UsePlanet) {
+		else if (this.currentActions.get(scanner) == ActionsEnums.UsePlanet) {
 			usePlanet();
 			this.currentActions.remove(scanner);
 		}
 		
 		
 	}
+
 	private void usePlanet() {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
 
 	private void useEconomy() {
 		// TODO Auto-generated method stub
 		
 	}
 
-
-
-
-	private void useDiplomacy() {
-		// TODO Auto-generated method stub
-		
+	private void useDiplomacy(List<Ships> ships, List<Planet> planets) {
+		// Meg kell vizsgálni, hogy mely hajók állnak diplomácia bolgyón (megjelenités is)
+		//Hajó választás léptetéshez
+		//gyarmatosítási mutató növelése
+		List<String> choosablePlanets = new ArrayList<>();
+		for (Ships ship : ships) {
+			for (Planet planet : planets) {
+				if (ship.getColonizePosition() == planet.getName() && planet.getPlanetColonizeType() == PlanetColonizeType.Diplomacy) {
+					choosablePlanets.add(planet.getName());
+				}
+			}
+		}
+		System.out.println(colorize(this.getColor()) + "Melyik bolgyón akarsz előre lépni?");
+		for (int i = 0; i < choosablePlanets.size(); i++) {
+			System.out.println(colorize(this.getColor()) + i +". " + choosablePlanets.get(i));
+			
+		}
 	}
 
-
-
-
-	private void moveShip() {
-		// TODO Auto-generated method stub
-		
+	//MoveShip - átnézendő
+	private void moveShip(Planet planet) {
+		System.out.println(colorize(this.getColor()) + "Válaszd ki melyik hajód mozogjon.");
+		for (int i = 0; i < this.gamerShips.size(); i++) {
+			System.out.println(colorize(this.getColor()) + this.gamerShips.get(i).getiD() + ". hajó");
+			
+		}
+		int scanner = actionScan.nextInt();
+		while (scanner > gamerShips.size() || scanner < 0) {
+			scanner = actionScan.nextInt();
+		}
+		System.out.println(colorize(this.getColor()) + "Válasz az alábbi lehetőségek közül.");
+		System.out.println(colorize(this.getColor()) + "1. Gyarmatosítás");
+		System.out.println(colorize(this.getColor()) + "2. Landolás");
+		int landScan = actionScan.nextInt();
+		while (landScan < 1 && landScan > 2) {
+			System.out.println(colorize(this.getColor()) + "A felsorolt lehetőségek közül válassz");
+			landScan = actionScan.nextInt();
+		}
+		if (landScan == 1) {
+			gamerShips.get(scanner).setColonizeMarker(0);
+			gamerShips.get(scanner).setColonizePosition(planet.getName());
+			System.out.println(gamerShips.get(scanner));
+		}
+		else if (landScan == 2) {
+			gamerShips.get(scanner).setLandPosition(planet.getName());
+			planet.useSpecialAbility();
+		}
 	}
 
-
-
-
-	private void colletEnergy() {
-		// TODO Auto-generated method stub
-		
+	private void colletEnergy(List<Ships> shipLocations, List<Planet> planets) {
+		for (Ships ships : shipLocations) {
+			for (Planet planet : planets) {
+				if (ships.getColonizePosition() == planet.getName() && planet.getResourceType() == PlanetResourceType.Energy) {
+					this.energyMarker++;
+				}
+			}
+			for (Planet planet : planets) {
+				if (ships.getLandPosition() == planet.getName() && planet.getResourceType() == PlanetResourceType.Energy) {
+					this.energyMarker++;
+				}
+			}
+			if (ships.getLandPosition() == "Galaxy") {
+				this.energyMarker++;
+			}
+		}	
 	}
 
-
-
-
-	private void collectCivilization() {
-		// TODO Auto-generated method stub
-		
+	private void collectCivilization(List<Ships> shipLocations, List<Planet> planets) {
+		//Ellenőrizni kell a hajók helyzetét, hogy azok mely bolgyón tartózkodnak .
+		//Amelyik bolgyón van hajónk meg kell vizsgálni add e cilivizació erőforrást
+		//Ha add akkor a jatekos erőforrását növelni kell a bolygón lévő hajók számával.
+		for (Ships ships : shipLocations) {
+			for (Planet planet : planets) {
+				if (ships.getColonizePosition() == planet.getName() && planet.getResourceType() == PlanetResourceType.Civilization) {
+					this.civilizationMarker++;
+				}
+			}
+			for (Planet planet : planets) {
+				if (ships.getLandPosition() == planet.getName() && planet.getResourceType() == PlanetResourceType.Civilization) {
+					this.civilizationMarker++;
+				}
+			}
+		}	
 	}
 
-
-
-
-	private String colorize(Color color) {
+	//SubMethods
+	private String colorize(ColorEnums color) {
 		switch (color) {
 		case Blue:
 			return "\u001B[34m";
@@ -261,9 +308,23 @@ public class Gamer {
 	}
 	
 	
-	
-	
-	
+	private Planet ChoosePlanets(List<Planet> planets) {
+		int displayPlanets = gamers * 2;
+		if (displayPlanets >6) {
+			displayPlanets = 6;
+		}
+		for (int i = 0; i < displayPlanets ; i++) {
+			System.out.println("Válasz Bolygót");
+			System.out.println(colorize(this.getColor())+ i + ". " + planets.get(i));
+		}
+		int scanner = actionScan.nextInt();
+		while (scanner > 5 || scanner < 0) {
+			System.out.println("A listából válasszon!");
+			scanner = actionScan.nextInt();
+		}
+		return planets.get(scanner);
+		
+	}
 	}
 	
 	
