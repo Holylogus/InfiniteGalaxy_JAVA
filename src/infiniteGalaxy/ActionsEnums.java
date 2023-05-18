@@ -6,6 +6,10 @@ public enum ActionsEnums {
 	CollectCivilization,
 	Diplomacy,
 	Economy,
-	UsePlanet;
+	UsePlanet,
+	DiceChanger,
+	EndTurn,
+	IncreaseEmipreLevel;
+	
 }
 

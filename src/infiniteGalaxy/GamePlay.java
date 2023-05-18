@@ -37,8 +37,11 @@ public class GamePlay {
 		
 		
 		gamerList.add(new Gamer(ColorEnums.Blue));
-		
+		System.out.println(gamerList.get(0).toString());
+		System.out.println(gamerList.get(0).gamerShips);
 		gamerList.add(new Gamer(ColorEnums.Green));
+		System.out.println(gamerList.get(1).toString());
+		System.out.println(gamerList.get(1).gamerShips);
 		
 		//Játék
 		for (Gamer gamer : gamerList) {
@@ -49,31 +52,10 @@ public class GamePlay {
 			}
 			
 			
-		}
-		
-		
-		
-		
+		}		
 	}
-
-
-
+	
 	public void checkVicoryPoints() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void followPlayer() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void reRollDices() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void activateDiceses() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -83,28 +65,28 @@ public class GamePlay {
 		switch (gamer.getEmpireMarker()) {
 		case 2:
 			diceNumbers = 5;
-			gamer.addSpaceships(2);
+			gamer.addSpaceships(0);
 			break;
 		case 3:
 			diceNumbers = 5;
-			gamer.addSpaceships(3);
+			gamer.addSpaceships(1);
 			break;
 		case 4:
 			diceNumbers = 6;
-			gamer.addSpaceships(3);
+			gamer.addSpaceships(0);
 			break;
 		case 5:
 			diceNumbers = 6;
-			gamer.addSpaceships(4);
+			gamer.addSpaceships(1);
 			break;
 		case 6:
 			diceNumbers = 7;
-			gamer.addSpaceships(4);
+			gamer.addSpaceships(0);
 			break;
 
 		default:
 			diceNumbers = 4;
-			gamer.addSpaceships(2);
+			gamer.addSpaceships(0);
 			break;
 		}
 		return diceNumbers;

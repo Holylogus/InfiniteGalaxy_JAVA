@@ -15,6 +15,7 @@ public class Gamer {
 	private int empireMarker;
 	private int victoryPoint;
 	public List<ActionsEnums> currentActions = new ArrayList<>();
+	public List<ActionsEnums> constatnActions = new ArrayList<>();
 	public List<Ships> gamerShips = new ArrayList<>();
 	public List<Planet> ownedPlanets = new ArrayList<>();
 	public static final Random rnd = new Random();
@@ -149,10 +150,10 @@ public class Gamer {
 	}
 	
 	public void ChooseAction(List<ActionsEnums> currentActions, List<Planet> planets) {
+		
 		System.out.println(colorize(this.color) + "Választható Akciók");
 		int index = 0;
-		for (ActionsEnums actions : currentActions) {
-			
+		for (ActionsEnums actions : currentActions) {	
 			System.out.println(colorize(this.color)+ index + ". " + actions);
 			index ++;
 		}
@@ -187,7 +188,26 @@ public class Gamer {
 			usePlanet();
 			this.currentActions.remove(scanner);
 		}
+		else if (this.currentActions.get(scanner) == ActionsEnums.DiceChanger) {
+			diceChanger();
+		}
+		else if (this.currentActions.get(scanner) == ActionsEnums.IncreaseEmipreLevel) {
+			increaseEmipreLevel();
+		}
+		else if (this.currentActions.get(scanner) == ActionsEnums.EndTurn) {
+			this.currentActions.clear();
+		}
 		
+		
+	}
+
+	private void increaseEmipreLevel() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void diceChanger() {
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -352,9 +372,14 @@ public class Gamer {
 	
 	
 	private Planet ChoosePlanets(List<Planet> planets) {
-		int displayPlanets = gamers * 2;
-		if (planets.size() > gamers * 2 || planets.size() > 6) {
-			displayPlanets = 6;
+		int displayPlanets;
+		if (planets.size() > 6) {
+			if (gamers * 2 > 6) {
+				displayPlanets = 6;
+			}
+			else {
+				displayPlanets = gamers * 2;
+			}		
 		}
 		else {
 			displayPlanets = planets.size();
