@@ -37,11 +37,9 @@ public class GamePlay {
 		
 		
 		gamerList.add(new Gamer(ColorEnums.Blue));
-		System.out.println(gamerList.get(0).toString());
-		System.out.println(gamerList.get(0).gamerShips);
+		
 		gamerList.add(new Gamer(ColorEnums.Green));
-		System.out.println(gamerList.get(1).toString());
-		System.out.println(gamerList.get(1).gamerShips);
+		
 		//Játék
 		for (Gamer gamer : gamerList) {
 			int rollDiceNumbers = calculateRollDiceNumber(gamer);

@@ -39,6 +39,7 @@ public class Planet {
 	public int getVictoryPoint() {
 		return victoryPoint;
 	}
+	
 
 	public void useSpecialAbility() {
         specialAbility.run();

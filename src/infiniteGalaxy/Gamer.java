@@ -16,6 +16,7 @@ public class Gamer {
 	private int victoryPoint;
 	public List<ActionsEnums> currentActions = new ArrayList<>();
 	public List<Ships> gamerShips = new ArrayList<>();
+	public List<Planet> ownedPlanets = new ArrayList<>();
 	public static final Random rnd = new Random();
 	public static final Scanner actionScan = new Scanner(System.in);
 	
@@ -179,7 +180,7 @@ public class Gamer {
 			this.currentActions.remove(scanner);
 		}
 		else if (this.currentActions.get(scanner) == ActionsEnums.Economy) {
-			useEconomy();
+			useEconomy(gamerShips, planets);
 			this.currentActions.remove(scanner);
 		}
 		else if (this.currentActions.get(scanner) == ActionsEnums.UsePlanet) {
@@ -195,30 +196,67 @@ public class Gamer {
 		
 	}
 
-	private void useEconomy() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void useDiplomacy(List<Ships> ships, List<Planet> planets) {
-		// Meg kell vizsgálni, hogy mely hajók állnak diplomácia bolgyón (megjelenités is)
-		//Hajó választás léptetéshez
-		//gyarmatosítási mutató növelése
-		List<String> choosablePlanets = new ArrayList<>();
+	private void useEconomy(List<Ships> ships, List<Planet> planets) {
+		List<Planet> choosablePlanets = new ArrayList<>();
 		for (Ships ship : ships) {
 			for (Planet planet : planets) {
-				if (ship.getColonizePosition() == planet.getName() && planet.getPlanetColonizeType() == PlanetColonizeType.Diplomacy) {
-					choosablePlanets.add(planet.getName());
+				if (ship.getColonizePosition() == planet.getName() && planet.getPlanetColonizeType() == PlanetColonizeType.Economy) {
+					
+					choosablePlanets.add(planet);
 				}
 			}
 		}
 		System.out.println(colorize(this.getColor()) + "Melyik bolgyón akarsz előre lépni?");
-		for (int i = 0; i < choosablePlanets.size(); i++) {
-			System.out.println(colorize(this.getColor()) + i +". " + choosablePlanets.get(i));
-			
+		Planet choosedPLanet = ChoosePlanets(choosablePlanets);
+		for (Ships ships2 : ships) {
+			if (ships2.getColonizePosition() == choosedPLanet.getName() ) {
+				ships2.setColonizeMarker(ships2.getColonizeMarker()+1);
+				if (ships2.getColonizeMarker() == choosedPLanet.getColonizeSize()) {
+					for (int i = 0; i < planets.size(); i++) {
+						if (planets.get(i).getName() == choosedPLanet.getName()) {
+							planets.remove(i);
+							this.ownedPlanets.add(choosedPLanet);
+							System.out.println("Megszerezted a "+choosedPLanet.getName() + " nevű bolygót!"); 
+						}
+					}
+					}
+				}
+				shipDataDisplay(ships2);
+			}
 		}
-	}
 
+	private void useDiplomacy(List<Ships> ships, List<Planet> planets) {
+		// Meg kell vizsgálni, hogy mely hajók állnak diplomácia bolgyón (megjelenités is)
+		//Hajó választás érték növeléshez
+		//gyarmatosítási mutató növelése
+		List<Planet> choosablePlanets = new ArrayList<>();
+		for (Ships ship : ships) {
+			for (Planet planet : planets) {
+				if (ship.getColonizePosition() == planet.getName() && planet.getPlanetColonizeType() == PlanetColonizeType.Diplomacy) {
+					
+					choosablePlanets.add(planet);
+				}
+			}
+		}
+		System.out.println(colorize(this.getColor()) + "Melyik bolgyón akarsz előre lépni?");
+		Planet choosedPLanet = ChoosePlanets(choosablePlanets);
+		for (Ships ships2 : ships) {
+			if (ships2.getColonizePosition() == choosedPLanet.getName() ) {
+				ships2.setColonizeMarker(ships2.getColonizeMarker()+1);
+				if (ships2.getColonizeMarker() == choosedPLanet.getColonizeSize()) {
+					for (int i = 0; i < planets.size(); i++) {
+						if (planets.get(i).getName() == choosedPLanet.getName()) {
+							planets.remove(i);
+							this.ownedPlanets.add(choosedPLanet);
+							System.out.println("Megszerezted a "+choosedPLanet.getName() + " nevű bolygót!"); 
+						}
+					}
+					}
+				}
+				shipDataDisplay(ships2);
+			}
+		}
+		
 	//MoveShip - átnézendő
 	private void moveShip(Planet planet) {
 		System.out.println(colorize(this.getColor()) + "Válaszd ki melyik hajód mozogjon.");
@@ -241,10 +279,12 @@ public class Gamer {
 		if (landScan == 1) {
 			gamerShips.get(scanner).setColonizeMarker(0);
 			gamerShips.get(scanner).setColonizePosition(planet.getName());
+			gamerShips.get(scanner).setLandPosition(null);
 			System.out.println(gamerShips.get(scanner));
 		}
 		else if (landScan == 2) {
 			gamerShips.get(scanner).setLandPosition(planet.getName());
+			gamerShips.get(scanner).setColonizePosition(null);
 			planet.useSpecialAbility();
 		}
 	}
@@ -264,7 +304,9 @@ public class Gamer {
 			if (ships.getLandPosition() == "Galaxy") {
 				this.energyMarker++;
 			}
-		}	
+			
+		}
+		playerDataDisplay(this);
 	}
 
 	private void collectCivilization(List<Ships> shipLocations, List<Planet> planets) {
@@ -282,7 +324,8 @@ public class Gamer {
 					this.civilizationMarker++;
 				}
 			}
-		}	
+		}
+		playerDataDisplay(this);
 	}
 
 	//SubMethods
@@ -310,8 +353,11 @@ public class Gamer {
 	
 	private Planet ChoosePlanets(List<Planet> planets) {
 		int displayPlanets = gamers * 2;
-		if (displayPlanets >6) {
+		if (planets.size() > gamers * 2 || planets.size() > 6) {
 			displayPlanets = 6;
+		}
+		else {
+			displayPlanets = planets.size();
 		}
 		for (int i = 0; i < displayPlanets ; i++) {
 			System.out.println("Válasz Bolygót");
@@ -325,7 +371,17 @@ public class Gamer {
 		return planets.get(scanner);
 		
 	}
+	
+	private void playerDataDisplay(Gamer gamer) {
+		System.out.println("Jelenlegi Satuszod: " + gamer);
+		
 	}
+	
+	private void shipDataDisplay(Ships ship) {
+		System.out.println("Jelenlegi Satuszod: " + ship);
+		
+	}
+}
 	
 	
 
