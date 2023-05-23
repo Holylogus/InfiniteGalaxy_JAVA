@@ -44,12 +44,19 @@ public class GamePlay {
 		System.out.println(gamerList.get(1).gamerShips);
 		
 		//Játék
-		for (Gamer gamer : gamerList) {
-			int rollDiceNumbers = calculateRollDiceNumber(gamer);
-			gamer.throwDice(rollDiceNumbers);
-			while (gamer.currentActions.size() != 0) {
-				gamer.ChooseAction(gamer.currentActions, planettList);
+		boolean gameInProgress = true;
+		while (gameInProgress) {
+			for (Gamer gamer : gamerList) {
+				int rollDiceNumbers = calculateRollDiceNumber(gamer);
+				gamer.throwDice(rollDiceNumbers);
+				while (gamer.currentActions.size() != 0) {
+					gamer.ChooseAction(gamer.currentActions, planettList);
+				}
+			if (gamer.getVictoryPoint() >= 21) {
+				gameInProgress = false;
 			}
+		}
+		
 			
 			
 		}		
