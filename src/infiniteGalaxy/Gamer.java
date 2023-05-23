@@ -15,7 +15,6 @@ public class Gamer {
 	private int empireMarker;
 	private int victoryPoint;
 	public List<ActionsEnums> currentActions = new ArrayList<>();
-	public List<ActionsEnums> constatnActions = new ArrayList<>();
 	public List<Ships> gamerShips = new ArrayList<>();
 	public List<Planet> ownedPlanets = new ArrayList<>();
 	public static final Random rnd = new Random();
@@ -145,12 +144,15 @@ public class Gamer {
 			default:
 				break;
 			}
+			
 		}
+		currentActions.add(ActionsEnums.DiceChanger);
+		currentActions.add(ActionsEnums.IncreaseEmipreLevel);
+		currentActions.add(ActionsEnums.EndTurn);	
 		
 	}
 	
-	public void ChooseAction(List<ActionsEnums> currentActions, List<Planet> planets) {
-		
+	public void ChooseAction(List<ActionsEnums> currentActions, List<Planet> planets) {	
 		System.out.println(colorize(this.color) + "Választható Akciók");
 		int index = 0;
 		for (ActionsEnums actions : currentActions) {	
@@ -202,7 +204,39 @@ public class Gamer {
 	}
 
 	private void increaseEmipreLevel() {
-		// TODO Auto-generated method stub
+		//Meg kell határozni a költséget, és ellenőrizni, hogy a játékos elegendővel rendelkezik-e.
+		//Mivel akar fizetni?
+		//Eredmény
+		int price = this.getEmpireMarker()+1;
+		System.out.println(colorize(this.getColor())+ price + " energiába/civilizációba kerül a fejlesztés");
+		System.out.println(colorize(this.getColor()) + "Mivel akarsz fizetni?");
+		System.out.println(colorize(this.getColor()) + "1. Energiával");
+		System.out.println(colorize(this.getColor()) + "2. Civilizációval");
+		int scanner = actionScan.nextInt();
+		switch (scanner) {
+		case 1:
+			if (this.getEnergyMarker() >= price) {
+				this.setEmpireMarker(price);
+				this.setEnergyMarker(-price);
+				System.out.println(colorize(this.getColor())+"A Birodalmad szintje "+price+"-ra növekedett!");
+			}
+			else {
+				System.out.println("Nincs elég erőforrásod");
+			}
+			break;
+		case 2:
+			if (this.getCivilizationMarker() >= price) {
+				this.setCivilizationMarker(scanner);
+				this.setCivilizationMarker(-price);
+				System.out.println(colorize(this.getColor())+"A Birodalmad szintje "+price+"-ra növekedett!");
+			}
+			else {
+				System.out.println("Nincs elég erőforrásod");
+			}
+			break;
+		default:
+			break;
+		}
 		
 	}
 
