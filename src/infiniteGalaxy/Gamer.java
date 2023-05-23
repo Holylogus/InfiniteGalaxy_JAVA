@@ -1,5 +1,6 @@
 package infiniteGalaxy;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -265,11 +266,22 @@ public class Gamer {
 			int counterIndex = 0;
 			for (ActionsEnums actionsEnums : currentActions) {
 				System.out.println(colorize(this.getColor())+ counterIndex +". "+ actionsEnums);
+				counterIndex++;
 			}
 			int choosedActionIndex = actionScan.nextInt();
 			currentActions.remove(choosedActionIndex);
-		}		
-		
+		}
+		System.out.println(colorize(this.getColor()) + "Válasz akciót");
+		for (int i = 0; i <= ActionsEnums.UsePlanet.ordinal(); i++) {
+            System.out.println(i + ": " + ActionsEnums.values()[i]);
+        }
+		int index = actionScan.nextInt();
+		if (index >= 0 && index <= ActionsEnums.UsePlanet.ordinal()) {
+            ActionsEnums chosenAction = ActionsEnums.values()[index];
+            currentActions.add(chosenAction);
+        } else {
+            System.out.println("Érvénytelen index.");
+        }		
 		
 	}
 
