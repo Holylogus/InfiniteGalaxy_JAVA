@@ -154,57 +154,68 @@ public class Gamer {
 	}
 	
 	public void ChooseAction(List<ActionsEnums> currentActions, List<Planet> planets) {	
-		System.out.println(colorize(this.color) + "Választható Akciók");
-		int index = 0;
-		for (ActionsEnums actions : currentActions) {	
-			System.out.println(colorize(this.color)+ index + ". " + actions);
-			index ++;
-		}
-		for (ActionsEnums actionsEnums : constantActions) {
-			System.out.println(colorize(this.color)+ index + ". " + actionsEnums);
-			index ++;
-		}
-		int scanner = actionScan.nextInt();
-		while (scanner >= currentActions.size() || scanner < 0) {
-			System.out.println("A listából válasszon!");
-			scanner = actionScan.nextInt();
-		}
-		if (this.currentActions.get(scanner) == ActionsEnums.CollectCivilization) {
-			collectCivilization(gamerShips, planets);
-			this.currentActions.remove(scanner);
-			this.toString();
-		}
-		else if (this.currentActions.get(scanner) == ActionsEnums.CollectEnergy) {
-			colletEnergy(gamerShips, planets);
-			this.currentActions.remove(scanner);
-			this.toString();
-		}
-		else if (this.currentActions.get(scanner) == ActionsEnums.MoveShips) {
-			moveShip(ChoosePlanets(planets));
-			this.currentActions.remove(scanner);
-		}
-		else if (this.currentActions.get(scanner) == ActionsEnums.Diplomacy) {
-			useDiplomacy(gamerShips, planets);
-			this.currentActions.remove(scanner);
-		}
-		else if (this.currentActions.get(scanner) == ActionsEnums.Economy) {
-			useEconomy(gamerShips, planets);
-			this.currentActions.remove(scanner);
-		}
-		else if (this.currentActions.get(scanner) == ActionsEnums.UsePlanet) {
-			usePlanet();
-			this.currentActions.remove(scanner);
-		}
-		else if (this.currentActions.get(scanner) == ActionsEnums.DiceChanger) {
-			diceChanger();
-		}
-		else if (this.currentActions.get(scanner) == ActionsEnums.IncreaseEmipreLevel) {
-			increaseEmipreLevel();
-		}
-		else if (this.currentActions.get(scanner) == ActionsEnums.EndTurn) {
-			this.currentActions.clear();
-		}
-		
+		 System.out.println(colorize(this.color) + "Választható Akciók");
+		    int index = 0;
+		    for (ActionsEnums actionsEnums : constantActions) {
+		        System.out.println(colorize(this.color) + index + ". " + actionsEnums);
+		        index++;
+		    }
+		    for (ActionsEnums actions : currentActions) {	
+		        System.out.println(colorize(this.color) + index + ". " + actions);
+		        index++;
+		    }
+		    
+		    int scanner = actionScan.nextInt();
+		    while (scanner >= currentActions.size() + constantActions.size() || scanner < 0) {
+		        System.out.println("A listából válasszon!");
+		        scanner = actionScan.nextInt();
+		    }
+		    
+		    ActionsEnums selectedAction = null;
+		    
+		    if (scanner < constantActions.size()) {
+		        selectedAction = constantActions.get(scanner);
+		    } else {
+		        selectedAction = currentActions.get(scanner - constantActions.size());
+		    }
+		    
+		    switch (selectedAction) {
+		        case CollectCivilization:
+		            collectCivilization(gamerShips, planets);
+		            currentActions.remove(selectedAction);
+		            this.toString();
+		            break;
+		        case CollectEnergy:
+		            colletEnergy(gamerShips, planets);
+		            currentActions.remove(selectedAction);
+		            this.toString();
+		            break;
+		        case MoveShips:
+		            moveShip(ChoosePlanets(planets));
+		            currentActions.remove(selectedAction);
+		            break;
+		        case Diplomacy:
+		            useDiplomacy(gamerShips, planets);
+		            currentActions.remove(selectedAction);
+		            break;
+		        case Economy:
+		            useEconomy(gamerShips, planets);
+		            currentActions.remove(selectedAction);
+		            break;
+		        case UsePlanet:
+		            usePlanet();
+		            currentActions.remove(selectedAction);
+		            break;
+		        case DiceChanger:
+		            diceChanger();
+		            break;
+		        case IncreaseEmipreLevel:
+		            increaseEmipreLevel();
+		            break;
+		        case EndTurn:
+		            currentActions.clear();
+		            break;
+		    }
 		
 	}
 
@@ -246,7 +257,19 @@ public class Gamer {
 	}
 
 	private void diceChanger() {
-		// TODO Auto-generated method stub
+		//2db kocka kiválasztása listából
+		//választott akció kiválasztása
+		System.out.println(colorize(this.getColor())+ "Melyik két akciót szeretnéd cserélni?");
+		
+		for (int i = 0; i <2; i++) {
+			int counterIndex = 0;
+			for (ActionsEnums actionsEnums : currentActions) {
+				System.out.println(colorize(this.getColor())+ counterIndex +". "+ actionsEnums);
+			}
+			int choosedActionIndex = actionScan.nextInt();
+			currentActions.remove(choosedActionIndex);
+		}		
+		
 		
 	}
 
