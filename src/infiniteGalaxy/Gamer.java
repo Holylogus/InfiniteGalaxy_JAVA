@@ -434,6 +434,7 @@ public class Gamer {
 		playerDataDisplay(this);
 	}
 
+	//Submethods
 	//SubMethods
 	private String colorize(ColorEnums color) {
 		switch (color) {
@@ -470,8 +471,8 @@ public class Gamer {
 		else {
 			displayPlanets = planets.size();
 		}
+		System.out.println("Válasz Bolygót");
 		for (int i = 0; i < displayPlanets ; i++) {
-			System.out.println("Válasz Bolygót");
 			System.out.println(colorize(this.getColor())+ i + ". " + planets.get(i));
 		}
 		int scanner = actionScan.nextInt();
