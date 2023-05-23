@@ -15,6 +15,7 @@ public class Gamer {
 	private int empireMarker;
 	private int victoryPoint;
 	public List<ActionsEnums> currentActions = new ArrayList<>();
+	public List<ActionsEnums> constantActions = new ArrayList<>();
 	public List<Ships> gamerShips = new ArrayList<>();
 	public List<Planet> ownedPlanets = new ArrayList<>();
 	public static final Random rnd = new Random();
@@ -146,9 +147,9 @@ public class Gamer {
 			}
 			
 		}
-		currentActions.add(ActionsEnums.DiceChanger);
-		currentActions.add(ActionsEnums.IncreaseEmipreLevel);
-		currentActions.add(ActionsEnums.EndTurn);	
+		constantActions.add(ActionsEnums.DiceChanger);
+		constantActions.add(ActionsEnums.IncreaseEmipreLevel);
+		constantActions.add(ActionsEnums.EndTurn);	
 		
 	}
 	
@@ -157,6 +158,10 @@ public class Gamer {
 		int index = 0;
 		for (ActionsEnums actions : currentActions) {	
 			System.out.println(colorize(this.color)+ index + ". " + actions);
+			index ++;
+		}
+		for (ActionsEnums actionsEnums : constantActions) {
+			System.out.println(colorize(this.color)+ index + ". " + actionsEnums);
 			index ++;
 		}
 		int scanner = actionScan.nextInt();
