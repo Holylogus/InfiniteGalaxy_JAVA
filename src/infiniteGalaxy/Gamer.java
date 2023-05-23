@@ -258,23 +258,29 @@ public class Gamer {
 				}
 			}
 		}
-		System.out.println(colorize(this.getColor()) + "Melyik bolgyón akarsz előre lépni?");
-		Planet choosedPLanet = ChoosePlanets(choosablePlanets);
-		for (Ships ships2 : ships) {
-			if (ships2.getColonizePosition() == choosedPLanet.getName() ) {
-				ships2.setColonizeMarker(ships2.getColonizeMarker()+1);
-				if (ships2.getColonizeMarker() == choosedPLanet.getColonizeSize()) {
-					for (int i = 0; i < planets.size(); i++) {
-						if (planets.get(i).getName() == choosedPLanet.getName()) {
-							planets.remove(i);
-							this.ownedPlanets.add(choosedPLanet);
-							System.out.println("Megszerezted a "+choosedPLanet.getName() + " nevű bolygót!"); 
+		if (choosablePlanets.size() >= 1) {
+			System.out.println(colorize(this.getColor()) + "Melyik bolgyón akarsz előre lépni?");
+			Planet choosedPLanet = ChoosePlanets(choosablePlanets);
+			for (Ships ships2 : ships) {
+				if (ships2.getColonizePosition() == choosedPLanet.getName() ) {
+					ships2.setColonizeMarker(ships2.getColonizeMarker()+1);
+					if (ships2.getColonizeMarker() == choosedPLanet.getColonizeSize()) {
+						for (int i = 0; i < planets.size(); i++) {
+							if (planets.get(i).getName() == choosedPLanet.getName()) {
+								planets.remove(i);
+								this.ownedPlanets.add(choosedPLanet);
+								System.out.println("Megszerezted a "+choosedPLanet.getName() + " nevű bolygót!"); 
+							}
+						}
 						}
 					}
-					}
+					shipDataDisplay(ships2);
 				}
-				shipDataDisplay(ships2);
-			}
+		}
+		else {
+			System.out.println(colorize(this.getColor()) + "Nincs Diplomácia bolgyód!");
+		}
+		
 		}
 		
 	//MoveShip - átnézendő
